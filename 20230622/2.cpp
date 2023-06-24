@@ -24,10 +24,12 @@ struct Node {
 // LinkedList index starts from 1.
 struct LinkedList {
     Node *head;
+    Node *tail;
     int size;
 
     LinkedList() {
         this->head = NULL;
+        this->tail = NULL;
         this->size = 0;
     }
 
@@ -37,8 +39,8 @@ struct LinkedList {
     void insertLast(int data);
 
     // Get the value, then remove this node.
-    void getFront(); 
-    void getLast(); 
+    int getFront(); 
+    int getLast(); 
 
     // Return first position if exist, else return -1.
     int searchList(int data); 
@@ -62,6 +64,7 @@ void LinkedList::insertFront(int data) {
     
     if(head == NULL) {
         head = newNode;
+        tail = newNode;
         ++size;
         return;
     }
@@ -76,35 +79,37 @@ void LinkedList::insertLast(int data) {
 
     if(head == NULL) {
         head = newNode;
+        tail = newNode;
         ++size;
         return;
     }
 
-    Node *temp = head;
-    while(temp->next != NULL) {
-        temp = temp->next;
-    }
-    temp->next = newNode;
+    tail->next = newNode;
+    tail = newNode;
     ++size;
 }
 
-void LinkedList::getFront() {
-    if(head == NULL) return;
+int LinkedList::getFront() {
+    assert(head != NULL);
 
     Node *temp = head;
+    int tempData = temp->data;
     head = temp->next;
     --size;
     delete temp;
+    return tempData;
 }
 
-void LinkedList::getLast() {
-    if(head == NULL) return;
+int LinkedList::getLast() {
+    assert(head != NULL);
 
     Node *temp = head;
     if(temp->next == NULL) {
+        int tempData = temp->data;
         head = NULL;
         --size;
         delete temp;
+        return tempData;
     }
 
     else {
@@ -112,9 +117,11 @@ void LinkedList::getLast() {
             temp = temp->next;
         }
         Node *last = temp->next;
+        int lastData = last->data;
         temp->next = NULL;
         --size;
         delete last;
+        return lastData;
     }
 }
 
@@ -129,7 +136,7 @@ void LinkedList::printList() {
 }
 
 int LinkedList::searchList(int data) {
-    if(head == NULL) return -1;
+    assert(head != NULL);
 
     Node *temp = head;
     int returnIndex = 1;
@@ -142,6 +149,7 @@ int LinkedList::searchList(int data) {
 }
 
 void LinkedList::sortList() {
+    if(head == NULL) return;
     for(Node *index = head; index != NULL; index = index->next) {
         for(Node *_index = index->next; _index != NULL; _index = _index->next) {
             if(index->data > _index->data) {
@@ -239,64 +247,76 @@ void Set::printSet() {
     set.printList();
 }
 
-void input(Set &setA, Set &setB, Set &setC, Set &setD) {
-    int sizeA, sizeB, sizeC, sizeD;
-    std::cout << "Enter the number of elements in set A (cardinality of set A): ";
-    std::cin >> sizeA;
-    std::cout << "Enter the number of elements in set B (cardinality of set B): ";
-    std::cin >> sizeB;
-    std::cout << "Enter the number of elements in set C (cardinality of set C): ";
-    std::cin >> sizeC;
-    std::cout << "Enter the number of elements in set D (cardinality of set D): ";
-    std::cin >> sizeD;
-
-    std::cout << "Enter " << sizeA << " elements in set A: ";
-    for(int index = 1; index <= sizeA; ++index) {
-        int temp; 
-        std::cin >> temp;
-        setA.insert(temp);
-    }
-    std::cout << "Enter " << sizeB << " elements in set B: ";
-    for(int index = 1; index <= sizeB; ++index) {
-        int temp; 
-        std::cin >> temp;
-        setB.insert(temp);
-    }
-    std::cout << "Enter " << sizeC << " elements in set C: ";
-    for(int index = 1; index <= sizeC; ++index) {
-        int temp; 
-        std::cin >> temp;
-        setC.insert(temp);
-    }
-    std::cout << "Enter " << sizeD << " elements in set D: ";
-    for(int index = 1; index <= sizeD; ++index) {
-        int temp; 
-        std::cin >> temp;
-        setD.insert(temp);
-    }
-}
-
-void output(Set setA, Set setB, Set setC, Set setD) {
-    Set *iAB = setA.setIntersection(setB);
-    Set *uCD = setC.setUnion(setD);
-    Set *answer = iAB->setDifference(*uCD);
-    
-    std::cout << "Elements of set A: ";
-    setA.printSet(); std::cout << '\n';
-    std::cout << "Elements of set B: ";
-    setB.printSet(); std::cout << '\n';
-    std::cout << "Elements of set C: ";
-    setC.printSet(); std::cout << '\n';
-    std::cout << "Elements of set D: ";
-    setD.printSet(); std::cout << '\n';
-    std::cout << "Elements of (A \\cap B) \\setminus (C \\cup D) are: ";
-    answer->printSet();
-}
-
 int main () {
-    Set setA, setB, setC, setD;
-    input(setA, setB, setC, setD);
-    output(setA, setB, setC, setD);
+    // Each time can insert 1 number. Howerver, unlimited number of entries and calculations until entering 0. 
+    Set setA, setB, setC, setD, *iAB, *uCD, *answer;
+    int temp;
+    while(1) {
+        std::cout << "---------------MENU---------------\n";
+        std::cout << "0. Exit the program.\n";
+        std::cout << "1. Enter element in set A.\n";
+        std::cout << "2. Enter element in set B.\n";
+        std::cout << "3. Enter element in set C.\n";
+        std::cout << "4. Enter element in set D.\n";
+        std::cout << "5. Compute (A \\cap B) \\setminus (C \\cup D).\n";
+        std::cout << "----------------------------------\n";
+        std::cout << "Enter your choice: ";
+
+        int choice; std::cin >> choice;
+        
+        if(choice == 0) break;
+
+        else if(choice == 1) {
+            std::cout << "Enter element in set A: ";
+            std::cin >> temp;
+            setA.insert(temp);
+            std::cout << "Elements of set A: ";
+            setA.printSet(); std::cout << '\n';
+        }
+
+        else if(choice == 2) {
+            std::cout << "Ente element in set B: ";
+            std::cin >> temp;
+            setB.insert(temp);
+            std::cout << "Elements of set B: ";
+            setB.printSet(); std::cout << '\n';
+        }
+
+        else if(choice == 3) {
+            std::cout << "Enter element in set C: ";
+            std::cin >> temp;
+            setC.insert(temp);
+            std::cout << "Elements of set C: ";
+            setC.printSet(); std::cout << '\n';
+        }
+
+        else if(choice == 4) {
+            std::cout << "Enter element in set D: ";
+            std::cin >> temp;
+            setD.insert(temp);
+            std::cout << "Elements of set D: ";
+            setD.printSet(); std::cout << '\n';
+        }
+
+        else if(choice == 5) {
+            iAB = setA.setIntersection(setB);
+            uCD = setC.setUnion(setD);
+            answer = iAB->setDifference(*uCD);
+            
+            std::cout << "Elements of set A: ";
+            setA.printSet(); std::cout << '\n';
+            std::cout << "Elements of set B: ";
+            setB.printSet(); std::cout << '\n';
+            std::cout << "Elements of set C: ";
+            setC.printSet(); std::cout << '\n';
+            std::cout << "Elements of set D: ";
+            setD.printSet(); std::cout << '\n';
+            std::cout << "Elements of (A \\cap B) \\setminus (C \\cup D) are: ";
+            answer->printSet(); std::cout << '\n';
+        }
+
+        else std::cout << "Wrong choice. Choose again.";
+    }
 
     return 0;
 }

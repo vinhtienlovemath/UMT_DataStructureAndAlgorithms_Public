@@ -2,7 +2,7 @@
     Student name: Phan Vinh Tien.
     
     Problem. 
-        Define a integer sequence structure by using linked list. 
+        Define a integer sequence structure by using linked list which has adding front, adding last, getting front, getting last, searching, and sorting operations. 
         Then define a set structure which has union, intersection, and difference operations. 
         In main funtion, enter 4 sets A, B, C, D; computing (A \cap B) \ (C \cup D).
 */

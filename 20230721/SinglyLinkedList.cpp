@@ -4,17 +4,6 @@
 using namespace std;
 
 /*
-    Constructor of LinkedList class.
-*/
-
-template<typename T>
-LinkedList<T>::LinkedList() {
-    this->head = NULL;
-    this->tail = NULL;
-    m_count = 0;
-}
-
-/*
     Fetch an item in LinkedList class.
     It will return the node of the selected index or NULL if the selected index is out of bounds.
 */

@@ -24,7 +24,7 @@ class LinkedList {
         Node<T> *tail;
 
         // Constructor.
-        LinkedList();
+        LinkedList(): head(NULL), tail(NULL), m_count(0) {}
 
         // get() operation.
         Node<T> *get(int index);
